@@ -261,19 +261,34 @@ document.addEventListener("keydown", function (event) {
     }
 });
 
-// Using scroll to change alien
-document.addEventListener("wheel", function (event) {
-    if (mode == 2) {
-        if (event.deltaY > 0) {
-            playSound("rccw");
+// Usa a rolagem da página para trocar de alien. A coroa giratória do Wear OS
+// (Samsung Internet/Chrome) gera scroll de verdade na página, não "wheel" com
+// deltaY — por isso comparamos a posição do scroll, não lemos event.deltaY.
+// Depois de cada evento recentralizamos a rolagem para nunca bater no topo/
+// fim e continuar detectando a próxima volta da coroa (ou virada do mouse).
+function scrollCenter() {
+    return (document.documentElement.scrollHeight - window.innerHeight) / 2;
+}
+
+let lastScrollY = scrollCenter();
+window.scrollTo(0, lastScrollY);
+
+document.addEventListener("scroll", function () {
+    const diff = window.scrollY - lastScrollY;
+
+    if (mode == 2 && diff !== 0) {
+        playSound("rccw");
+        if (diff > 0) {
             index = (index + 1) % aliens.length;
         } else {
-            playSound("rccw");
             index = (index - 1 + aliens.length) % aliens.length;
         }
         updateAlien();
     }
-});
+
+    lastScrollY = scrollCenter();
+    window.scrollTo(0, lastScrollY);
+}, { passive: true });
 
 document.addEventListener("rotarydetent", function (event) {
     if (mode == 2) {
