@@ -8,6 +8,9 @@
 --innerGreen: #1cd947;
 --darkGreen: #0e5e18;
 --back: #08330f;
+--innerRed: #d91c1c;
+--brightRed: #ff3b3b;
+--darkRed: #5e0e0e;
 }
 
 /* Centraliza todo o Omnitrix no relógio */
@@ -137,6 +140,28 @@
   border-radius: 50%;
   opacity: 0.65;
   animation: hologram-on-animation 1s;
+}
+
+/* Modo descarregado (vermelho) */
+.discharged .dial {
+  background-color: var(--innerRed);
+}
+
+.discharged .ring {
+  background-color: var(--innerRed);
+  animation: discharged-pulse 1.2s ease-in-out infinite;
+}
+
+/* Animate discharged */
+@keyframes discharged-pulse {
+  0%, 100% {
+    background-color: var(--innerRed);
+    box-shadow: 0 0 10px rgba(217, 28, 28, 0.8);
+  }
+  50% {
+    background-color: var(--brightRed);
+    box-shadow: 0 0 30px 8px rgba(255, 59, 59, 0.95);
+  }
 }
 
 /* Animate alien */

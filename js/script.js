@@ -173,8 +173,10 @@ const aliens = [
 const alienEl = document.getElementById("aliens");
 const dial = document.querySelector(".dial");
 
+// 1 = repouso | 2 = seleção aberta | 3 = transformado | 4 = descarregado (vermelho)
 let mode = 1;
 let index = 0;
+const openTimers = [];
 
 // Pré-carregar áudios para evitar atrasos
 const sounds = {
@@ -200,6 +202,22 @@ function playSound(sound) {
 }
 
 document.querySelector(".alien").addEventListener("click", function () {
+    // Já transformado: o próximo toque descarrega o Omnitrix
+    if (mode == 3) {
+        mode = 4;
+        playSound("activate");
+        document.body.classList.add("discharged");
+        return;
+    }
+
+    // Descarregado: o próximo toque recarrega e volta ao modo inicial
+    if (mode == 4) {
+        mode = 1;
+        playSound("activating");
+        document.body.classList.remove("discharged");
+        return;
+    }
+
     mode = 2;
     playSound("activate");
     setTimeout(() => playSound("activating"), 50); // Pequeno atraso entre os sons
@@ -208,16 +226,19 @@ document.querySelector(".alien").addEventListener("click", function () {
     document.querySelector(".des-lft").classList.add("des-lft-on");
     document.querySelector(".des-rht").classList.add("des-rht-on");
 
-    setTimeout(function () {
+    openTimers.push(setTimeout(function () {
         document.querySelector(".hologram").style.display = "block";
-    }, 250);
-    setTimeout(function() {
+    }, 250));
+    openTimers.push(setTimeout(function() {
         alienEl.style.display = 'block';
-    }, 500);
+    }, 500));
 });
 
 document.querySelector(".hologram").addEventListener("click", function () {
-    mode = 1;
+    mode = 3;
+    // Cancela a abertura pendente para o alien não reaparecer com o mostrador fechado
+    openTimers.forEach(clearTimeout);
+    openTimers.length = 0;
     playSound("transformation");
     document.querySelector(".des-lft").classList.remove("des-lft-on");
     document.querySelector(".des-rht").classList.remove("des-rht-on");
@@ -266,6 +287,7 @@ function endSwipe(e) {
 }
 
 function handleSwipe() {
+    if (mode != 2) return;
     let diffX = endX - startX;
     if (Math.abs(diffX) > 50) {
         let direction = diffX > 0 ? 1 : -1;
