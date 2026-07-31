@@ -229,7 +229,7 @@ document.querySelector(".alien").addEventListener("click", function () {
     openTimers.push(setTimeout(function () {
         document.querySelector(".hologram").style.display = "block";
     }, 250));
-    openTimers.push(setTimeout(function() {
+    openTimers.push(setTimeout(function () {
         alienEl.style.display = 'block';
     }, 500));
 });
@@ -254,6 +254,20 @@ document.addEventListener("keydown", function (event) {
             playSound("rccw");
             index = (index + 1) % aliens.length;
         } else if (event.key === "ArrowLeft") {
+            playSound("rccw");
+            index = (index - 1 + aliens.length) % aliens.length;
+        }
+        updateAlien();
+    }
+});
+
+// Using scroll to change alien
+document.addEventListener("wheel", function (event) {
+    if (mode == 2) {
+        if (event.deltaY > 0) {
+            playSound("rccw");
+            index = (index + 1) % aliens.length;
+        } else {
             playSound("rccw");
             index = (index - 1 + aliens.length) % aliens.length;
         }
