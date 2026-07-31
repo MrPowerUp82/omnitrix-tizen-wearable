@@ -202,6 +202,7 @@ function playSound(sound) {
 }
 
 document.querySelector(".alien").addEventListener("click", function () {
+    console.log(`click alien, mode atual=${mode}`);
     // Já transformado: o próximo toque descarrega o Omnitrix
     if (mode == 3) {
         mode = 4;
@@ -275,6 +276,7 @@ window.scrollTo(0, lastScrollY);
 
 document.addEventListener("scroll", function () {
     const diff = window.scrollY - lastScrollY;
+    console.log(`scroll diff=${diff.toFixed(1)} mode=${mode}`);
 
     if (mode == 2 && diff !== 0) {
         playSound("rccw");
@@ -283,6 +285,7 @@ document.addEventListener("scroll", function () {
         } else {
             index = (index - 1 + aliens.length) % aliens.length;
         }
+        console.log(`-> index=${index} (${aliens[index].name})`);
         updateAlien();
     }
 

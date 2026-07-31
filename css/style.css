@@ -20,19 +20,50 @@
   Usamos vmin em vez de min()/clamp() por compatibilidade com o navegador
   antigo dos relógios Tizen.
 */
-html,
-body {
+/* Só o html tem altura/overflow definidos: é ele que vira o "scrolling
+   element" (window.scrollY). Se body também tivesse height:100% + overflow,
+   o body criaria sua PRÓPRIA caixa de rolagem independente (body.scrollTop),
+   e como o evento "scroll" não faz bubble, o listener em document nunca via
+   esse scroll — a coroa/mouse wheel pareciam não fazer nada. */
+html {
   width: 100%;
   height: 100%;
-  background-color: black;
   overflow-x: hidden;
   overflow-y: scroll;
   scrollbar-width: none; /* Firefox */
 }
 
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
+body {
+  width: 100%;
+  background-color: black;
+}
+
+html::-webkit-scrollbar {
   display: none; /* Chrome, Samsung Internet, WebView */
+}
+
+/* Overlay de debug (console.log/warn/error na tela do relógio). Medidas
+   escolhidas pra ficar dentro do círculo visível em telas redondas mesmo
+   no pior caso (canto inferior da faixa): 20² + 38² = 1844 < 50² (raio). */
+#debug-overlay {
+  position: fixed;
+  bottom: 12vmin;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40vmin;
+  max-height: 10vmin;
+  overflow-y: hidden;
+  background: rgba(0, 0, 0, 0.75);
+  color: #0f0;
+  font-family: monospace;
+  font-size: 1.6vmin;
+  line-height: 1.3;
+  padding: 0.6vmin 1vmin;
+  border-radius: 1vmin;
+  white-space: pre-wrap;
+  word-break: break-all;
+  pointer-events: none;
+  z-index: 9999;
 }
 
 /* Sem altura, a página não rola e a coroa/scroll não gera eventos */
