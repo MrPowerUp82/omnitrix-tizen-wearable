@@ -1,0 +1,251 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+:root {
+--grey: #686f69;
+--innerGreen: #1cd947;
+--darkGreen: #0e5e18;
+--back: #08330f;
+--innerRed: #d91c1c;
+--brightRed: #ff3b3b;
+--darkRed: #5e0e0e;
+}
+
+/*
+  O desenho original foi feito para 360x360. Aqui essa base vira 100vmin,
+  ou seja, 1px do desenho = 0.2778vmin. Assim o Omnitrix preenche a menor
+  dimensão da tela em qualquer relógio (360, 396, 450, 480...) sem cortar.
+  Usamos vmin em vez de min()/clamp() por compatibilidade com o navegador
+  antigo dos relógios Tizen.
+*/
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  overflow: hidden;
+}
+
+/* Centraliza todo o Omnitrix no relógio */
+.container {
+  width: 100vmin;
+  height: 100vmin;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.frame {
+  width: 100vmin;
+  height: 100vmin;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Parte principal do Omnitrix */
+.dial {
+  width: 100vmin;
+  height: 100vmin;
+  background-color: var(--innerGreen);
+  border-radius: 50%;
+  position: absolute;
+  box-shadow: inset 1.111vmin 1.111vmin 4.167vmin 0.833vmin rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring {
+  width: 86.667vmin;
+  height: 86.667vmin;
+  border-radius: 50%;
+  position: absolute;
+  background-color: var(--innerGreen);
+  box-shadow: 0 0 2.778vmin rgba(0, 255, 0, 0.8);
+}
+
+/* Partes laterais */
+.des-lft,
+.des-rht {
+  width: 37.5vmin;
+  height: 66.667vmin;
+  background-color: black;
+  clip-path: polygon(100% 50%, 0 0, 0 100%);
+  position: fixed;
+  border-radius: 70% 0 0 70%;
+}
+
+.active{
+  background-color: var(--darkGreen);
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+.deactive{
+  display: none;
+}
+
+.des-lft {
+  left: 0.278vmin;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.des-lft-on {
+  animation: des-lft-on-animation 1s forwards;
+}
+
+.des-lft-off {
+  animation: des-lft-off-animation 1s forwards;
+}
+
+.des-rht {
+  right: 0.278vmin;
+  top: 50%;
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.des-rht-on {
+  animation: des-rht-on-animation 1s forwards;
+}
+
+.des-rht-off {
+  animation: des-rht-off-animation 1s forwards;
+}
+
+/* Alien no centro */
+.alien {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+/* Imagem do alien */
+.alien img {
+  width: 36.111vmin;
+  height: 75vmin;
+  object-fit: contain;
+  display: none;
+}
+
+.alien-on {
+  animation: alien-on-animation 1s;
+}
+
+.hologram{
+  display: none;
+  z-index: 100;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: var(--innerGreen);
+  border-radius: 50%;
+  opacity: 0.65;
+  animation: hologram-on-animation 1s;
+}
+
+/* Modo descarregado (vermelho) */
+.discharged .dial {
+  background-color: var(--innerRed);
+}
+
+.discharged .ring {
+  background-color: var(--innerRed);
+  animation: discharged-pulse 1.2s ease-in-out infinite;
+}
+
+/* Animate discharged */
+@keyframes discharged-pulse {
+  0%, 100% {
+    background-color: var(--innerRed);
+    box-shadow: 0 0 2.778vmin rgba(217, 28, 28, 0.8);
+  }
+  50% {
+    background-color: var(--brightRed);
+    box-shadow: 0 0 8.333vmin 2.222vmin rgba(255, 59, 59, 0.95);
+  }
+}
+
+/* Animate alien */
+@keyframes alien-on-animation {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Animate hologram */
+@keyframes hologram-on-animation {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+}
+
+
+/* Animate des-rht */
+@keyframes des-rht-on-animation {
+  0% {
+    right: 0.278vmin;
+  }
+  100% {
+    right: -41.667vmin;
+    display: none;
+  }
+}
+
+/* Animate des-rht */
+@keyframes des-rht-off-animation {
+  0% {
+    right: -41.667vmin;
+  }
+  100% {
+    right: 0.278vmin;
+  }
+}
+
+/* Animate des-lft */
+@keyframes des-lft-on-animation {
+  0% {
+    left: 0.278vmin;
+  }
+  100% {
+    left: -41.667vmin;
+    display: none;
+  }
+}
+
+/* Animate des-lft */
+@keyframes des-lft-off-animation {
+  0% {
+    left: -41.667vmin;
+  }
+  100% {
+    left: 0.278vmin;
+  }
+}
