@@ -268,17 +268,24 @@ document.addEventListener("keydown", function (event) {
 // Depois de cada evento recentralizamos a rolagem para nunca bater no topo/
 // fim e continuar detectando a próxima volta da coroa (ou virada do mouse).
 function scrollCenter() {
-    return (document.documentElement.scrollHeight - window.innerHeight) / 2;
+    // Arredondado: window.scrollY sempre chega em pixel inteiro, então
+    // comparar com um valor fracionário gerava um diff residual (ex.: -0.5)
+    // a cada evento, mesmo parado.
+    return Math.round((document.documentElement.scrollHeight - window.innerHeight) / 2);
 }
 
 let lastScrollY = scrollCenter();
 window.scrollTo(0, lastScrollY);
 
+// Zona-morta: ignora ruído de subpixel/coalescing para não disparar troca
+// de alien sozinho nem mascarar a direção real do giro.
+const SCROLL_DEADZONE = 3;
+
 document.addEventListener("scroll", function () {
     const diff = window.scrollY - lastScrollY;
-    console.log(`scroll diff=${diff.toFixed(1)} mode=${mode}`);
+    console.log(`scroll y=${window.scrollY} last=${lastScrollY} diff=${diff} mode=${mode}`);
 
-    if (mode == 2 && diff !== 0) {
+    if (mode == 2 && Math.abs(diff) > SCROLL_DEADZONE) {
         playSound("rccw");
         if (diff > 0) {
             index = (index + 1) % aliens.length;

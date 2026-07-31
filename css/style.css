@@ -31,6 +31,10 @@ html {
   overflow-x: hidden;
   overflow-y: scroll;
   scrollbar-width: none; /* Firefox */
+  /* Sem isso, o "scrollTo" de recentralização pode animar em vez de
+     aplicar na hora, competindo com o próximo giro da coroa e mascarando
+     a direção (mais perceptível girando anti-horário perto do limite). */
+  scroll-behavior: auto;
 }
 
 body {

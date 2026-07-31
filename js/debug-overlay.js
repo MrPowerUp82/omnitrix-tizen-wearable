@@ -3,7 +3,7 @@
 // então isso intercepta console.log/warn/error e mostra as últimas linhas
 // numa faixa semi-transparente perto da base do mostrador.
 // Para desligar: troque DEBUG_OVERLAY para false (ou use ?debug=0 na URL).
-const DEBUG_OVERLAY = true;
+const DEBUG_OVERLAY = false;
 
 (function () {
     const params = new URLSearchParams(location.search);
